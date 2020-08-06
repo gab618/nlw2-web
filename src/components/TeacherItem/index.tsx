@@ -3,38 +3,56 @@ import React from "react";
 import whatsappIcon from "../../assets/icons/whatsapp.svg";
 
 import "./styles.css";
+import api from "../../services/api";
 
-const TeacherItem: React.FC = () => {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post("connections", {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://pbs.twimg.com/profile_images/1273352915986665477/GytiKiUC_200x200.png"
-          alt="Ezreal Blindado"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Ezreal Blindado</strong>
-          <span>Química</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Entusiasta das melhores tecnologias de química avançada.
-        <br />
-        Apaixonado por explodir coisas em laboratório e por mudar a vida das
-        pessoas através de experiências. Mais de 200.00 pessoas já passaram por
-        um das minhas explosões. Inimigo número 1 da #PanelaCraft.
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+
+        <a
+          onClick={createNewConnection}
+          target="_blank"
+          rel="noopener noreferrer"
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
